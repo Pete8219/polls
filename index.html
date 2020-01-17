@@ -6,11 +6,40 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="radio.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
-<body>
+
+<body style="margin:0; padding:15px;"> 
     <div class="radio">
-        <h1>Наш радиоканал в интернете</h1>
-        <div class="radio-info" style="width:300px; height:auto; padding:15px; text-align: center;"></div>
+        <h1>Результаты опроса по управляющим компаниям</h1>
+        
+        
+       <div>
+           <span class="labelSelect">
+            <label for="ratingUK">Выберите управляющую компанию</label>
+        </span>
+            <select name="ratingUK" id="ratingUK"  style="width: 450px; font-size:14px;margin-bottom:20px;"></select>
+
+        </div>
+        
+        
+        <div> 
+            <span class="labelSelect">
+            <label for="questions">Выберите критерий оценки</label>
+        </span>
+                <select name="questions" id="questions"  style="width: 450px; font-size:14px;margin-bottom:20px;"></select>
+        </div>
+
+        <div>
+            <button id="results" type="button" class="btn btn-success btn-lg"> Сформировать отчет</button>
+        </div>
+
+        <div class="radio-info" style="width:100%; height:auto; text-align: center;margin-top: 40px;">
+            <table cellpadding="5px" border="1px" border-collapse="collapse" >
+
+            </table>
+        </div>
     </div>
 </body>
 </html>
