@@ -1,3 +1,6 @@
+
+
+
 document.addEventListener("DOMContentLoaded", ()=>{
 
     let data = {};
@@ -56,21 +59,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let params = {
         company: [
             "",
-            "ООО ЕГУК",
-            "ООО Стройжилсервис",
-            "ООО Изумрудный город",
-            "ООО СБИ",
-            "ТСЖ Изумрудный город",
-            "ТСЖ Возрождение",
-            "ООО ЖК Возрождение",
-            "ООО Квартал",
-            "ООО Жилстандарт",
-            "ООО Кит",
-            "ТСЖ Ямальский дом",
-            "ТСЖ Наш дом",
-            "ООО УК Доверие",
-            "ООО КЦ ЯНАО",
-            "ООО Салехардская жилищная компания"
+            "ООО \"ЕГУК\"",
+            "ООО \"Стройжилсервис\"",
+            "ООО \"Изумрудный город\"",
+            "ООО \"СБИ\"",
+            "ТСЖ \"Изумрудный город\"",
+            "ТСЖ \"Возрождение\"",
+            "ООО \"ЖК Возрождение\"",
+            "ООО \"Квартал\"",
+            "ООО \"Жилстандарт\"",
+            "ООО \"Кит\"",
+            "ТСЖ \"Ямальский дом\"",
+            "ТСЖ \"Наш дом\"",
+            "ООО \"УК Доверие\"",
+            "ООО \"КЦ ЯНАО\"",
+            "ООО \"Салехардская жилищная компания\""
         ],
         
         questions: [
@@ -94,6 +97,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
         uk: '',
         criteriy: ''
     };
+
+
+    let resGrade = [
+            
+       {
+           key: '',
+           ocenka: [],
+       },    
+    ]
 
     let companyName = document.getElementById('ratingUK');
     let question = document.getElementById('questions');
@@ -123,17 +135,20 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
 
 
-
-
     createSelect();
-
+    let i =0;
     let name, valueOption;
+
     // Отслеживание события выбора в списке
 
        companyName.addEventListener('change', function () {
             let name = document.getElementById('ratingUK').options.selectedIndex;
             let valueOption = document.getElementById('ratingUK').options[name].value;
-            requestParam.uk = valueOption.split(" ").join("-");  
+            requestParam.uk = valueOption.split(" ").join("-"); 
+
+            let t = document.querySelector('table');
+            
+            i = 0; 
     })
 
     // Отслеживание события выбора в списке
@@ -146,10 +161,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
     // Отслеживание нажатие кнопки Сформировать отчет
-
+    let table = document.querySelector('table');
     let btn = document.getElementById('results');
+    let rst = document.getElementById('reset');
+    let average = document.getElementById('average');
+    
 
         btn.addEventListener('click', function() {
+            i = i + 1;
+            //console.log(i)
             let uParam = requestParam.uk;
             let qParam = requestParam.criteriy;
 
@@ -157,8 +177,29 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 console.log('Вы не выбрали ни один из критериев отбора');
             }
             
+            rst.style.display="inline-block";
+            average.style.display="block";
 
-            GetData(uParam, qParam);
+            GetData(uParam, qParam, i);
+        })
+
+        // Отслеживание нажатия кнопки Сбросить настройки
+
+        rst.addEventListener('click', function() {
+            let t = document.querySelector('table');
+            let tr = document.getElementsByTagName('tr');
+            
+            t.deleteTHead();
+
+            let rowCount = tr.length;
+            for (let k = rowCount -1; k > 0 ; k--) {
+                t.deleteRow(k);
+
+            }
+            
+            average.style.display="none";
+            resGrade = [];
+           // j = 0;
         })
 
 
@@ -166,7 +207,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     /* Получение данных в формате JSON из файла */    
 
-    function GetData(uParam, qParam) {
+    function GetData(uParam) {
+        if ( i === 1) {
     
         let request = new XMLHttpRequest();
 
@@ -179,102 +221,228 @@ document.addEventListener("DOMContentLoaded", ()=>{
         request.addEventListener('readystatechange', function() {
             if (request.readyState === 4 && request.status == 200) {
                 data = JSON.parse(request.response);
-               //console.log(data);  
+                PullData(data,uParam);
           
-                let table = document.querySelector('table');
 
-
-               /*  function GetCompanyResults(results) {
-                    if (results) {
-
-                    } else {
-                        
-                    }
-
-
-
-                } */
                 
-               
-                 /* Генерация таблицы */
-                
-                let tData = Object.keys(data[0]);
-                
-                
-                generateTableHead(table,tData); 
-                generateTable(table, data);
-
-                function generateTableHead(table,tData) {   //создание заголовка таблицы
-                    let thead = table.createTHead();
-                    let row = thead.insertRow();
-                    for (let key of tData) {
-
-                        let th = document.createElement("th");
-                        let text = document.createTextNode(key);
-                        
-                            
-                            th.appendChild(text);
-                                                
-                        row.appendChild(th);
-                    }
-                }
-
-                function generateTable(table, tData) {      // создание табличной части
-                    for (let element of tData) {
-
-                     
-                        
-
-                            
-                           // console.log(element["Выберите управляющую компанию"]);
-                            
-        
-                        
-                        
-                       
-                        let row = table.insertRow();
-                        for (key in element) {
-                            
-                            
-                            let cell = row.insertCell();
-                            let text = document.createTextNode(element[key].toLowerCase());
-                            
-                            let newText = element[key].split(" ").join("-");
-                     
-                        /*Функция преобразование текстовых ответов в цифровую форму*/
-                        
-                        function replaceText() {
-                            rating.forEach(function(item) {
-                                if (newText === item.criteria.split(" ").join("-")) {
-                                    newText = item.grade;
-                                    text = document.createTextNode(newText);
-                                } 
-                                
-                            })
-                        }
-                        
-                        replaceText();
-                        cell.appendChild(text);
-                        }
-                    
-                    }
-                } 
-
-
-            }
-          /*   PullData(data); */
-            
-        });
+            } //end If
+         
+          
+        }); // end of XMLHttpRequest to server
         
         
            
     }
+   
     
+       
+    } // End of GetData
+
+
+/* ==============================*/
+
+function generateTableHead(table,tData) {   //создание заголовка таблицы
+    let thead = table.createTHead();
+    let row = thead.insertRow();
+    for (let key of tData) {
+
+        let th = document.createElement("th");
+        let text = document.createTextNode(key);
+        
+            
+            th.appendChild(text);
+                                
+        row.appendChild(th);
+    }
+}
+
+
+function generateTable(table, tData, uParam) {      // создание табличной части
+    for (let element of tData) {
+
+
+        if ((element["Выберите управляющую компанию"]).split(" ").join("-") == uParam) {
+
+            let row = table.insertRow();
+            for (key in element) {
+                let cell = row.insertCell();
+                
+                    let text = document.createTextNode(element[key].toLowerCase());
+                
+                    let newText = element[key].split(" ").join("-");
+             
+                /*Функция преобразование текстовых ответов в цифровую форму*/
+                
+                function replaceText(gradeItem) {
+                    
+                    
+                    rating.forEach(function(item) {
+                      
+                        if (gradeItem === item.criteria.split(" ").join("-")) {
+                              
+                            gradeItem = item.grade;
+                            
+                            text = document.createTextNode(gradeItem);
+                        
+                            
+                            
+                        }
+                        return gradeItem;
+                       
+                    })
+
+                    if (!isNaN(gradeItem) && key!=="") {
+                    resGrade.push(
+                        {key,
+                        ocenka: +(gradeItem)},
+                    );
+                        }
+                    
+                    
+                }
+                 
+                
+                
+
+                replaceText(newText);
+                cell.appendChild(text);
+                
+                //return resGrade;
+
+        }
+       
+     
+    } // End If
+
+    } // End For cicle
     
-    /* GetData(); */
-/*     function PullData(data) {
-        console.log(data[0].IP);
-    } */
+    getResults(resGrade);
+} 
+
+
+
+
+/*===============*/
+
+
+
+    function PullData(dataParam, uParam) {
+       // console.log(dataParam)
+
+        let data = dataParam;
+           
+        /* Генерация таблицы */
+       
+       let tData = Object.keys(data[0]);
+       
+       
+       
+       generateTableHead(table,tData); 
+       generateTable(table, data, uParam);
+
+
+
+// End function generateTable  
+
+
+    } 
+
+// Создаем массив с вопросами    
+
+function getResults(data) {
     
+        let newArray = [];
+        let uniqueObject = {};
+
+        for (let i in data) {
+            if (data[i]['key'] == "") {
+                delete data[i]['key'];
+            }
+            
+            objCriteriy = data[i]['key'];
+           // delete data[i]['ocenka'];
+    
+            uniqueObject[objCriteriy] = data[i];
+        }
+
+        for (i in uniqueObject) {
+            newArray.push(uniqueObject[i]);
+        }
+
+        let obj = [];
+        for (let j in  newArray) {
+
+            if (newArray[j] !== 'undefined') {
+
+                obj.push(newArray[j]['key'])
+                
+            }
+ 
+            //console.log(obj);  
+
+         }
+
+
+        
+         
+
+         getSummGrade(data, obj);
+
+}
+
+//Функция подсчета голосов по каждому критерия для выбранной управляющей компании
+
+
+function getSummGrade(data, obj) {
+
+    let results = {
+        key : '',
+        summa: [],
+
+    };
+    //console.log(data)
+
+    for (let k = 1; k< obj.length; k++) {
+        let newItem = obj[k].split(" ").join('-');
+        
+
+       for (let i = 1; i< data.length; i++) {
+           let newData = data[i]['key'];
+            if (newData.split(" ").join("-") == newItem) {
+                console.log('yeeee')
+
+                results.key = newData;
+                results.summa.push(data[i]['ocenka']);
+                console.log(results)
+            }
+        } 
+
+    }
+        
+   /*      for (let k in data) {
+
+
+            for (let i = 1; i< obj.length; i++) {
+
+            if (data[k]['key'] == results[i]) {
+                console.log('yeee')
+            }
+
+
+        }
+ 
+        results[i] = obj[i];
+       // console.log();
+    }  
+   */
+//console.log(results)
+  
+
+
+ }
+
+
+
+
 
 });
