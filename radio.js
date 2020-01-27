@@ -393,15 +393,111 @@ function getResults(data) {
 //Функция подсчета голосов по каждому критерия для выбранной управляющей компании
 
 
-function getSummGrade(data, obj) {
+let results = [
 
-    let results = {
+    {
         key : '',
         summa: [],
 
-    };
-    //console.log(data)
+    }
 
+];
+//console.log(results);
+
+
+
+
+   /*  for (let i = 0; i< 3; i++) {
+        results[i] = new Object({
+            key: '',
+            summa: [],
+        });
+  //  console.log(results)
+
+    } */
+
+
+
+
+
+function summData(data,item) {
+    let table_rows = table.rows;
+    let total = 0;
+    let cell;
+
+    console.log(table_rows.item(1));
+
+
+     /* for (let i =1, iLen = table_rows.length-1; i< iLen; i++) {
+         cell = table_rows[i].cell[4];
+         total += (cell.textContent || cell.innerText);
+
+         console.log(total);
+     } */
+    //let height = parseInt(table_rows.length);
+    
+
+   
+}
+
+
+function getSummGrade(data, obj) {
+    //console.log(obj)
+
+    let k = 0;
+    let res;
+
+    for (let i = 1; i < obj.length; i++) {
+        //console.log(obj[i])
+        let parametr = obj[i];
+        let Obj = new Object (
+            {key: '',
+            summa: [],
+            }
+        )
+
+        Obj.key = parametr;
+        results.push(Obj);
+        console.log(results);
+
+       // console.log(parametr);
+/*             for (key in data) {
+                if (data[key].key == parametr) {
+
+                        if (Obj.key == "") {
+
+                            Obj.key = parametr;
+
+                        } else {
+                            return;
+                        }
+                    
+                        
+                        Obj.summa.push(data[key]['ocenka']);
+                        console.log(Obj)
+                        
+                    };
+                    
+
+                    
+                    //console.log(key);
+                    
+                    
+                    
+
+                   //console.log(data[key].key);
+                }
+                
+               
+            } */
+    
+    //console.log(results);
+}
+} 
+
+    //console.log(results);
+
+/* 
     for (let k = 1; k< obj.length; k++) {
         let newItem = obj[k].split(" ").join('-');
         
@@ -417,7 +513,7 @@ function getSummGrade(data, obj) {
             }
         } 
 
-    }
+    } */
         
    /*      for (let k in data) {
 
@@ -438,8 +534,7 @@ function getSummGrade(data, obj) {
 //console.log(results)
   
 
-
- }
+//}
 
 
 
