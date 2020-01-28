@@ -3,6 +3,8 @@
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
+    let res;
+
     let data = {};
     
 
@@ -52,9 +54,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     ]
 
 
-    let uprCompany = {
-        company:'',
-    }
+ 
 
     let params = {
         company: [
@@ -101,10 +101,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     let resGrade = [
             
-       {
-           key: '',
-           ocenka: [],
-       },    
+      
     ]
 
     let companyName = document.getElementById('ratingUK');
@@ -165,6 +162,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let btn = document.getElementById('results');
     let rst = document.getElementById('reset');
     let average = document.getElementById('average');
+    let crit = document.querySelector('crit');
+    let grade = document.querySelector('grade');
     
 
         btn.addEventListener('click', function() {
@@ -202,8 +201,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
            // j = 0;
         })
 
+        average.addEventListener('click', GetOtchet());
 
-    
+
+
 
     /* Получение данных в формате JSON из файла */    
 
@@ -292,22 +293,21 @@ function generateTable(table, tData, uParam) {      // создание табл
                     })
 
                     if (!isNaN(gradeItem) && key!=="") {
-                    resGrade.push(
-                        {key,
-                        ocenka: +(gradeItem)},
+                        
+
+                    resGrade.push( {
+                        key,
+                        ocenka: [gradeItem],
+                    }
                     );
                         }
                     
                     
                 }
-                 
-                
-                
-
+    
                 replaceText(newText);
                 cell.appendChild(text);
-                
-                //return resGrade;
+        
 
         }
        
@@ -318,8 +318,6 @@ function generateTable(table, tData, uParam) {      // создание табл
     
     getResults(resGrade);
 } 
-
-
 
 
 /*===============*/
@@ -350,193 +348,47 @@ function generateTable(table, tData, uParam) {      // создание табл
 // Создаем массив с вопросами    
 
 function getResults(data) {
-    
-        let newArray = [];
-        let uniqueObject = {};
 
-        for (let i in data) {
-            if (data[i]['key'] == "") {
-                delete data[i]['key'];
-            }
-            
-            objCriteriy = data[i]['key'];
-           // delete data[i]['ocenka'];
-    
-            uniqueObject[objCriteriy] = data[i];
+
+
+    let ResultObj = {}
+
+    let ResArr = []
+
+    data.forEach((item)=> {
+        if(!ResultObj[item.key]) {
+            ResultObj[item.key] = item;
+        } else {
+            ResultObj[item.key].ocenka.push(...item.ocenka);
         }
+    });
 
-        for (i in uniqueObject) {
-            newArray.push(uniqueObject[i]);
-        }
+    res = Object.values(ResultObj);
+    
 
-        let obj = [];
-        for (let j in  newArray) {
+    res.forEach((item)=> {
+       
+        let sum = item.ocenka.reduce(function(accum,currentValue){
+            return accum + currentValue;
+        })
 
-            if (newArray[j] !== 'undefined') {
-
-                obj.push(newArray[j]['key'])
-                
-            }
+        item.ocenka = sum;
+    }) 
+    
+    
+  
+    GetOtchet(res);
  
-            //console.log(obj);  
+}
 
-         }
+function GetOtchet(res) {
 
 
-        
-         
-
-         getSummGrade(data, obj);
+    
 
 }
 
 //Функция подсчета голосов по каждому критерия для выбранной управляющей компании
-
-
-let results = [
-
-    {
-        key : '',
-        summa: [],
-
-    }
-
-];
-//console.log(results);
-
-
-
-
-   /*  for (let i = 0; i< 3; i++) {
-        results[i] = new Object({
-            key: '',
-            summa: [],
-        });
-  //  console.log(results)
-
-    } */
-
-
-
-
-
-function summData(data,item) {
-    let table_rows = table.rows;
-    let total = 0;
-    let cell;
-
-    console.log(table_rows.item(1));
-
-
-     /* for (let i =1, iLen = table_rows.length-1; i< iLen; i++) {
-         cell = table_rows[i].cell[4];
-         total += (cell.textContent || cell.innerText);
-
-         console.log(total);
-     } */
-    //let height = parseInt(table_rows.length);
-    
-
-   
-}
-
-
-function getSummGrade(data, obj) {
-    //console.log(obj)
-
-    let k = 0;
-    let res;
-
-    for (let i = 1; i < obj.length; i++) {
-        //console.log(obj[i])
-        let parametr = obj[i];
-        let Obj = new Object (
-            {key: '',
-            summa: [],
-            }
-        )
-
-        Obj.key = parametr;
-        results.push(Obj);
-        console.log(results);
-
-       // console.log(parametr);
-/*             for (key in data) {
-                if (data[key].key == parametr) {
-
-                        if (Obj.key == "") {
-
-                            Obj.key = parametr;
-
-                        } else {
-                            return;
-                        }
-                    
-                        
-                        Obj.summa.push(data[key]['ocenka']);
-                        console.log(Obj)
-                        
-                    };
-                    
-
-                    
-                    //console.log(key);
-                    
-                    
-                    
-
-                   //console.log(data[key].key);
-                }
-                
-               
-            } */
-    
-    //console.log(results);
-}
-} 
-
-    //console.log(results);
-
-/* 
-    for (let k = 1; k< obj.length; k++) {
-        let newItem = obj[k].split(" ").join('-');
-        
-
-       for (let i = 1; i< data.length; i++) {
-           let newData = data[i]['key'];
-            if (newData.split(" ").join("-") == newItem) {
-                console.log('yeeee')
-
-                results.key = newData;
-                results.summa.push(data[i]['ocenka']);
-                console.log(results)
-            }
-        } 
-
-    } */
-        
-   /*      for (let k in data) {
-
-
-            for (let i = 1; i< obj.length; i++) {
-
-            if (data[k]['key'] == results[i]) {
-                console.log('yeee')
-            }
-
-
-        }
- 
-        results[i] = obj[i];
-       // console.log();
-    }  
-   */
-//console.log(results)
-  
-
-//}
-
-
 
 
 
