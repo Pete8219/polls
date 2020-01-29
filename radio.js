@@ -3,7 +3,7 @@
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
-    let res;
+    var res;
 
     let data = {};
     
@@ -150,20 +150,20 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     // Отслеживание события выбора в списке
 
-        question.addEventListener('change', function () {
+         question.addEventListener('change', function () {
             let QName = document.getElementById('questions').options.selectedIndex;
             let QValue = document.getElementById('questions').options[QName].value; 
             requestParam.criteriy = QValue.split(" ").join("-");
     })
-
+ 
 
     // Отслеживание нажатие кнопки Сформировать отчет
     let table = document.querySelector('table');
     let btn = document.getElementById('results');
     let rst = document.getElementById('reset');
     let average = document.getElementById('average');
-    let crit = document.querySelector('crit');
-    let grade = document.querySelector('grade');
+    let crit = document.querySelector('.crit');
+    let grade = document.querySelector('.grade');
     
 
         btn.addEventListener('click', function() {
@@ -197,7 +197,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
             }
             
             average.style.display="none";
+            
             resGrade = [];
+
+            let element = document.querySelector('.crit');
+            while(element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+
+            let select = document.getElementById('ratingUK');
+            select.options.selectedIndex = -1; 
            // j = 0;
         })
 
@@ -353,7 +362,7 @@ function getResults(data) {
 
     let ResultObj = {}
 
-    let ResArr = []
+    
 
     data.forEach((item)=> {
         if(!ResultObj[item.key]) {
@@ -374,12 +383,34 @@ function getResults(data) {
 
         item.ocenka = sum;
     }) 
+
+let i = 0;
+
+    average.addEventListener('click', function() {
+
+         i = i + 1;
+        res.forEach((item)=> {
+            if (i === 1) {
+       
+            let elem =  document.createElement('div');
+            
+            elem.innerHTML = `<span class="crit-item">${item.key}:</span><span class="crit-value"> ${item.ocenka}</span>`;
     
+            crit.appendChild(elem);
+
+        }
+        })
+    })
     
   
-    GetOtchet(res);
+  
+    //GetOtchet(res);
+   
  
 }
+
+
+
 
 function GetOtchet(res) {
 

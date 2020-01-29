@@ -54,4 +54,30 @@ table {
     
   }
 
+  .crit {
+    margin-top: 20px;
+  }
+
+  .crit>div {
+    height:auto;
+    vertical-align: center;
+  }
+
+.crit-item {
+  width: 70%;
+  display: inline-block;
+  font-weight: 500;
+  padding: 5px;
+  background:aliceblue;
+  margin-top: 5px;
+  
+}
+
+.crit-value {
+  width: 100px;
+padding: 5px;
+display: inline-block;
+background:beige;
+}
+
   
