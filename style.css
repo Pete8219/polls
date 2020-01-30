@@ -116,4 +116,10 @@ padding-bottom: 0;
  /* background: red;*/
   margin-right: 10px;
 }
-  
+
+.crit-color {
+  display:inline-block;
+  padding:5px;
+  margin-top:5px;
+}
+

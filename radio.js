@@ -405,11 +405,12 @@ let i = 0;
        
             let elem =  document.createElement('div');
             
-            elem.innerHTML = `<span class="crit-item">${numberKey}&nbsp;&nbsp; ${item.key}:</span><span class="crit-value"> ${item.ocenka}</span>`;
+            elem.innerHTML = `<div class="crit-item">${numberKey}&nbsp;&nbsp; ${item.key}:</div><div class="crit-value"> ${item.ocenka}</div><div class="crit-color">1</div>`;
     
             crit.appendChild(elem);
 
             numberKey++;
+ 
 
         }
         })
@@ -424,16 +425,10 @@ let k = 0;
             getMaxOcenka(res);
 
         }
-
-
-        
+   
 
     })
-  
-  
-    //GetOtchet(res);
-   
- 
+
 }
 
 
@@ -458,7 +453,7 @@ function getMaxOcenka(data) {
    
 }
 
-
+// Функция выводы гистограммы
 
 function drawGistagramm(data,max) {
     let elem = document.createElement('div');
@@ -487,33 +482,29 @@ function drawGistagramm(data,max) {
     
     data.forEach((item)=> {
 
+        //Создаем блоки колонок для отображения в гистограмме
         
-       /*  let letters = '0123456789ABCDEF';
-
-        let color = letters[Math.floor(Math.random() * 16)];  */
-        
-        
-
         let graficBlock = document.createElement('div');
         
         graficBlock.classList.add('crit-column');
         graficBlock.style.width = `${mediumX}px`;
         graficBlock.style.height = `${mediumY*(+(item.ocenka))}px`;
         graficBlock.style.backgroundColor = getRandomColor();
-
-        //graficBlock.innerHTML = `<div style="text-align: center; font-size:1.5em;margin-top:1em;color:#fff;writing-mode:vertical-rl;">Вопрос № &nbsp${i}</div>`;
         
+ 
         
         elem.appendChild(graficBlock)
          i++;
 
+         Legend(graficBlock.style.backgroundColor);
+
+        //Добавляем колонку правее суммы баллов по каждому критерию для индикации
+
+
+
+
 
     })
-    
-    
-    //console.log(mediumX)
-    
-
 
 }
 
@@ -525,6 +516,26 @@ function getRandomColor() {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+
+  function Legend(colorData) {
+
+
+
+    let critItemHeight = document.querySelector('.crit-item').clientHeight;
+    let critValue = document.querySelector('.crit-value');
+
+    critValue.style.height = critItemHeight +'px';
+    
+    let color = document.querySelector('.crit-column').style.backgroundColor;
+    
+    critColor = document.querySelector('.crit-color');
+    
+    critColor.style.backgroundColor = colorData; 
+    critColor.style.height = critItemHeight+'px';
+    critColor.style.width = "30px";
+
+
   }
 
 
