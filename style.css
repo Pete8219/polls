@@ -80,4 +80,40 @@ display: inline-block;
 background:beige;
 }
 
+button#graf {
+  margin-left: 5px;
+  width: 200px;
+}
+
+
+.grafic {
+  width:80%;
+  height:500px;
+  border-bottom: 2px solid black;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+#gistogramm {
+  margin: 0 auto;
+}
+
+#gistogramm h3 {
+  text-align: center;
+  padding-top: 30px;
+}
+
+.crit-column {
+margin-bottom: 0;
+padding-bottom: 0;
+  display:block;
+  float:left; 
+ /* background: red;*/
+  margin-right: 10px;
+}
   

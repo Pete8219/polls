@@ -164,6 +164,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let average = document.getElementById('average');
     let crit = document.querySelector('.crit');
     let grade = document.querySelector('.grade');
+    let graf = document.getElementById('graf');
+    let gistogramm = document.getElementById('gistogramm');
     
 
         btn.addEventListener('click', function() {
@@ -177,7 +179,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             }
             
             rst.style.display="inline-block";
-            average.style.display="block";
+            average.style.display="inline-block";
 
             GetData(uParam, qParam, i);
         })
@@ -207,10 +209,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
             let select = document.getElementById('ratingUK');
             select.options.selectedIndex = -1; 
+
+            while(gistogramm.firstChild) {
+                gistogramm.removeChild(gistogramm.firstChild);
+            }
            // j = 0;
         })
 
-        average.addEventListener('click', GetOtchet());
+        //average.addEventListener('click', GetOtchet());
 
 
 
@@ -387,21 +393,42 @@ function getResults(data) {
 let i = 0;
 
     average.addEventListener('click', function() {
+        
+        graf.style.display='inline-block';
 
          i = i + 1;
+         
+         let numberKey = 1;
+
         res.forEach((item)=> {
             if (i === 1) {
        
             let elem =  document.createElement('div');
             
-            elem.innerHTML = `<span class="crit-item">${item.key}:</span><span class="crit-value"> ${item.ocenka}</span>`;
+            elem.innerHTML = `<span class="crit-item">${numberKey}&nbsp;&nbsp; ${item.key}:</span><span class="crit-value"> ${item.ocenka}</span>`;
     
             crit.appendChild(elem);
+
+            numberKey++;
 
         }
         })
     })
-    
+let k = 0;
+    graf.addEventListener('click', function() {
+
+        k  = k + 1;
+        if (k === 1) {
+
+            
+            getMaxOcenka(res);
+
+        }
+
+
+        
+
+    })
   
   
     //GetOtchet(res);
@@ -410,14 +437,98 @@ let i = 0;
 }
 
 
+var max;
+
+// Получаем максимальное значение в массиве, чтобы рассчитать среднее значение цены деленияпо шкале  Y
+
+function getMaxOcenka(data) {
+    let arr = [];
+    
+        data.forEach((item)=> {
+            
+            arr.push(item.ocenka);
+            
+        })
 
 
-function GetOtchet(res) {
+     max = Math.max.apply(null, arr);
+     
+     drawGistagramm(data,max);
+     
+   
+}
 
 
+
+function drawGistagramm(data,max) {
+    let elem = document.createElement('div');
+    let head = document.createElement('h3');
+     
+
+    head.innerText = 'Диаграмма результатов';
+
+
+    elem.classList.add("grafic");
+    gistogramm.appendChild(head);
+
+    gistogramm.appendChild(elem);
+
+    //Получаем высоту и ширину блока в котором будем рисовать гистограмму
+
+    let elHeight = document.querySelector('.grafic').clientHeight;
+    let elWidth = document.querySelector('.grafic').clientWidth;
+    
+    //Рассчитываем значение цены деления по шкале  Y и ширину колонки для отрисовки по шкале X
+
+    let mediumY =  elHeight / +(max);
+    let mediumX = (elWidth/ +(data.length)) - 50;
+
+    let i =1;
+    
+    data.forEach((item)=> {
+
+        
+       /*  let letters = '0123456789ABCDEF';
+
+        let color = letters[Math.floor(Math.random() * 16)];  */
+        
+        
+
+        let graficBlock = document.createElement('div');
+        
+        graficBlock.classList.add('crit-column');
+        graficBlock.style.width = `${mediumX}px`;
+        graficBlock.style.height = `${mediumY*(+(item.ocenka))}px`;
+        graficBlock.style.backgroundColor = getRandomColor();
+
+        //graficBlock.innerHTML = `<div style="text-align: center; font-size:1.5em;margin-top:1em;color:#fff;writing-mode:vertical-rl;">Вопрос № &nbsp${i}</div>`;
+        
+        
+        elem.appendChild(graficBlock)
+         i++;
+
+
+    })
+    
+    
+    //console.log(mediumX)
     
 
+
 }
+
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+
+
 
 //Функция подсчета голосов по каждому критерия для выбранной управляющей компании
 
